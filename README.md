@@ -10,6 +10,6 @@
   - echo, gorm, air, pnpm, 
   - postman 
 
-  ###learning curve
+  ### learning curve
 
-  ###need to do a poc with groom and postgress 
+  ### need to do a poc with groom and postgress 
