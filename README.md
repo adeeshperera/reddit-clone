@@ -1,7 +1,7 @@
 # reddit-clone
 
 
-### check out those things before starting
+### check out these things before starting
 
 - whats a ORM,
 - database migration
