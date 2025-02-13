@@ -1,5 +1,18 @@
 # reddit-clone
 
+
+check out those things before starting
+
+whats a ORM, 
+database migration
+server side rendering
+REST APIs
+next router 
+panic mode in go
+little bit of OOP conncetps 
+
+
+
 # techstack 
 - frontend nextjs
 - backend GO
