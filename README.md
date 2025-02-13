@@ -5,11 +5,11 @@
 - backend GO
 - databse postgress
 
-other tools
-  shacn, tailwind, 
-  echo, gorm, air, pnpm, 
-  postman 
+## other tools
+  - shacn, tailwind, 
+  - echo, gorm, air, pnpm, 
+  - postman 
 
-  learning curve
+  ###learning curve
 
-  need to do a poc with groom and postgress 
+  ###need to do a poc with groom and postgress 
