@@ -1,28 +1,41 @@
-# reddit-clone
+# Reddit Clone
 
+## Prerequisites
 
-### check out these things before starting
+Before starting, ensure you are familiar with the following concepts:
 
-- whats a ORM,
-- database migration
-- server side rendering
-- REST APIs
-- next router 
-- panic mode in go
-- little bit of OOP conncetps 
+- **ORM (Object-Relational Mapping)**: Understanding how ORMs work to map database tables to objects in your code.
+- **Database Migration**: Managing changes to your database schema over time.
+- **Server-Side Rendering (SSR)**: Rendering web pages on the server rather than in the browser.
+- **REST APIs**: Building and consuming RESTful services.
+- **Next.js Router**: Handling routing in a Next.js application.
+- **Panic Mode in Go**: Understanding how Go handles runtime errors and panics.
+- **Object-Oriented Programming (OOP) Concepts**: Basic principles of OOP, such as classes, objects, inheritance, and polymorphism.
 
+## Tech Stack
 
+- **Frontend**: Next.js
+- **Backend**: Go
+- **Database**: PostgreSQL
 
-# techstack 
-- frontend nextjs
-- backend GO
-- databse postgress
+## Tools
 
-## other tools
-  - shacn, tailwind, 
-  - echo, gorm, air, pnpm, 
-  - postman 
+- **Styling**: Tailwind CSS, Shadcn
+- **Backend Framework**: Echo
+- **ORM**: GORM
+- **Hot Reload**: Air
+- **Package Manager**: pnpm
+- **API Testing**: Postman
 
-  ### learning curve
+## Learning Curve
 
-  ### need to do a poc with groom and postgress 
+This project involves a learning curve, especially if you are new to some of the technologies and concepts mentioned above.
+
+## Proof of Concept (POC)
+
+A POC is needed to demonstrate the integration of GORM with PostgreSQL.
+
+## Production-Ready Templates
+
+- **Go Lang Boilerplate**: [go-echo-gorm-boilerplate](https://github.com/DFanso/go-echo-gorm-boilerplate)
+- **Next.js Boilerplate**: [nextjs-boilerplate](https://github.com/DFanso/nextjs-boilerplate)
