@@ -37,5 +37,5 @@ A POC is needed to demonstrate the integration of GORM with PostgreSQL.
 
 ## Production-Ready Templates
 
-- **Go Lang Boilerplate**: [go-echo-gorm-boilerplate](https://github.com/DFanso/go-echo-groom-boilerplate)
+- **Go Lang Boilerplate**: [go-echo-gorm-boilerplate](https://github.com/DFanso/go-echo-grom-boilerplate)
 - **Next.js Boilerplate**: [nextjs-boilerplate](https://github.com/DFanso/nextjs-boilerplate)
