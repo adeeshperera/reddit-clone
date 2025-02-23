@@ -20,6 +20,7 @@ func registerUserRoutes(api *echo.Group, userController *controllers.UserControl
 	users := api.Group("/users")
 	{
 		users.GET("", userController.GetAll)
+		users.GET("/paginated", userController.GetPaginated)
 		users.GET("/:id", userController.GetByID)
 		users.POST("", userController.Create)
 		users.PUT("/:id", userController.Update)

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/dfanso/go-echo-boilerplate/internal/models"
@@ -31,6 +32,25 @@ func (c *UserController) GetAll(ctx echo.Context) error {
 		return utils.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to get users", err)
 	}
 	return utils.SuccessResponse(ctx, http.StatusOK, "Users retrieved successfully", users)
+}
+
+func (c *UserController) GetPaginated(ctx echo.Context) error {
+	fmt.Println("GetPaginated called")
+
+	// Extract page and limit from query parameters
+	pageStr := ctx.QueryParam("page")
+	limitStr := ctx.QueryParam("limit")
+
+	page, _ := strconv.Atoi(pageStr) // this like parsInt
+	limit, _ := strconv.Atoi(limitStr)
+
+	// Call the service method
+	result, err := c.service.FindPaginated(ctx.Request().Context(), nil, page, limit)
+	if err != nil {
+		return utils.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to get paginated users", err)
+	}
+
+	return utils.SuccessResponse(ctx, http.StatusOK, "Paginated users retrieved successfully", result)
 }
 
 func (c *UserController) GetByID(ctx echo.Context) error {
