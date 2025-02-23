@@ -136,7 +136,6 @@ curl -X POST http://localhost:8080/api/users \
     "created_at": "2025-01-04T10:30:00Z",
     "updated_at": "2025-01-04T10:30:00Z"
   }
-}
 ```
 
 ## Development
