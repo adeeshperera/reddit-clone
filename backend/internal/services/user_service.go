@@ -7,10 +7,12 @@ import (
 
 	"github.com/dfanso/go-echo-boilerplate/internal/models"
 	"github.com/dfanso/go-echo-boilerplate/internal/repositories"
+	"github.com/dfanso/go-echo-boilerplate/internal/types"
 )
 
 type UserService struct {
 	repo *repositories.UserRepository
+	types.PaginationResult
 }
 
 func NewUserService(repo *repositories.UserRepository) *UserService {
@@ -25,6 +27,10 @@ func (s *UserService) FindOne(ctx context.Context, filter interface{}) (*models.
 
 func (s *UserService) GetAll(ctx context.Context) ([]models.User, error) {
 	return s.repo.FindAll(ctx)
+}
+
+func (s *UserService) FindPaginated(ctx context.Context, query interface{}, page int, limit int) (*types.PaginationResult, error) {
+	return s.repo.FindPaginated(ctx, query, page, limit)
 }
 
 func (s *UserService) GetByID(ctx context.Context, id uuid.UUID) (*models.User, error) {
