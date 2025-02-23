@@ -1,19 +1,4 @@
-# Go Echo Boilerplate
-
-A production-ready boilerplate for building RESTful APIs using Go Echo framework with PostgreSQL and GORM.
-
-## Features
-
-- **Echo Framework**: High performance, minimalist Go web framework
-- **PostgreSQL & GORM**: Using GORM as ORM with PostgreSQL
-- **UUID Support**: UUID primary keys for better data distribution
-- **Clean Architecture**: Follows clean architecture principles with proper separation of concerns
-- **Environment Management**: Multiple environment support with proper configuration management
-- **Structured Logging**: Custom logging middleware with colored output
-- **API Versioning**: Built-in support for API versioning
-- **Input Validation**: Request validation using go-playground/validator
-- **Error Handling**: Centralized error handling with proper HTTP status codes
-- **Hot Reload**: Support for hot reload during development using Air
+# Go Backend
 
 ## Project Structure
 
@@ -29,6 +14,8 @@ A production-ready boilerplate for building RESTful APIs using Go Echo framework
 │   ├── repositories/          # Data access layer
 │   ├── routes/                # Route definitions
 │   └── services/             # Business logic
+    └── types/                # Types and interfaces
+
 ├── pkg/
 │   ├── database/             # Database connections
 │   ├── middleware/           # Custom middleware
@@ -50,7 +37,7 @@ A production-ready boilerplate for building RESTful APIs using Go Echo framework
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/go-echo-boilerplate.git
+   git clone https://github.com/dfanso/go-echo-boilerplate.git
    cd go-echo-boilerplate
    ```
 
@@ -61,7 +48,7 @@ A production-ready boilerplate for building RESTful APIs using Go Echo framework
 
 3. **Set up environment variables**
    ```bash
-   cp .env.development .env
+   cp .env.example .env
    ```
    Edit the `.env` file with your configuration.
 
@@ -98,45 +85,9 @@ POSTGRES_DB=myapp
 
 ## API Endpoints
 
-### User Routes
-- `GET /api/users` - Get all users
-- `GET /api/users/:id` - Get user by ID
-- `POST /api/users` - Create new user
-- `PUT /api/users/:id` - Update user
-- `DELETE /api/users/:id` - Delete user
+### Import Postman Collection
 
-### Health Check
-- `GET /health` - Service health check
-
-## Request/Response Examples
-
-### Create User
-```bash
-# Request
-curl -X POST http://localhost:8080/api/users \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "John Doe",
-    "email": "john@example.com",
-    "password": "securepass123",
-    "role": "user",
-    "status": "active"
-  }'
-
-# Response
-{
-  "success": true,
-  "message": "User created successfully",
-  "data": {
-    "id": "123e4567-e89b-12d3-a456-426614174000",
-    "name": "John Doe",
-    "email": "john@example.com",
-    "role": "user",
-    "status": "active",
-    "created_at": "2025-01-04T10:30:00Z",
-    "updated_at": "2025-01-04T10:30:00Z"
-  }
-```
+Import the `go-echo-boilerplate.postman_collection.json` file into Postman to test the API endpoints.
 
 ## Development
 
