@@ -62,11 +62,6 @@ func (c *UserController) Create(ctx echo.Context) error {
 		return utils.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request body", err)
 	}
 
-	// Set defaults and validate
-	now := time.Now()
-	user.CreatedAt = now
-	user.UpdatedAt = now
-
 	if user.Role == "" {
 		user.Role = models.RoleUser
 	}
