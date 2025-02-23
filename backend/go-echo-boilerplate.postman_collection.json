@@ -1,0 +1,130 @@
+{
+	"info": {
+		"_postman_id": "4e0df45a-a24b-4056-877d-537bdcda1dfd",
+		"name": "go-echo-boilerplate",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17849869",
+		"_collection_link": "https://codex-api-testing.postman.co/workspace/Project~2f154a0f-22bf-484b-b84b-bebacc92e619/collection/17849869-4e0df45a-a24b-4056-877d-537bdcda1dfd?action=share&source=collection_link&creator=17849869"
+	},
+	"item": [
+		{
+			"name": "User Post",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Leo Gavin\",\r\n    \"email\": \"dfanso+1@pm.me\",\r\n    \"password\": \"123@Dfanso\",\r\n    \"role\": \"admin\",\r\n    \"status\": \"active\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Update",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Leo Gavin\",\r\n  \"email\": \"dfanso+2@pm.me\",\r\n  \"password\": \"123@Dfanso\",\r\n  \"role\": \"admin\",\r\n  \"status\": \"testing\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users/6778c54e9809cb61c642d022",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"6778c54e9809cb61c642d022"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Get All",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Get One",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/users/6778c54e9809cb61c642d022",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"6778c54e9809cb61c642d022"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
