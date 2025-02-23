@@ -13,7 +13,7 @@ import (
 
 type UserRepository struct {
 	db *gorm.DB
-	types.PaginationResult
+	types.UserPaginationResult
 }
 
 func NewUserRepository(db *gorm.DB) *UserRepository {
@@ -43,7 +43,7 @@ func (r *UserRepository) FindAll(ctx context.Context) ([]models.User, error) {
 	return users, result.Error
 }
 
-func (r *UserRepository) FindPaginated(ctx context.Context, query interface{}, page int, limit int) (*types.PaginationResult, error) {
+func (r *UserRepository) FindPaginated(ctx context.Context, query interface{}, page int, limit int) (*types.UserPaginationResult, error) {
 
 	// Validate page (minimum 1)
 	if page < 1 {
@@ -89,8 +89,8 @@ func (r *UserRepository) FindPaginated(ctx context.Context, query interface{}, p
 	totalPages := int(math.Ceil(float64(total) / float64(limit)))
 
 	// Return the result
-	return &types.PaginationResult{
-		Data:       users,
+	return &types.UserPaginationResult{
+		Users:      users,
 		Total:      total,
 		Page:       page,
 		Limit:      limit,

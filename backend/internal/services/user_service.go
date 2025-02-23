@@ -12,7 +12,7 @@ import (
 
 type UserService struct {
 	repo *repositories.UserRepository
-	types.PaginationResult
+	types.UserPaginationResult
 }
 
 func NewUserService(repo *repositories.UserRepository) *UserService {
@@ -29,7 +29,7 @@ func (s *UserService) GetAll(ctx context.Context) ([]models.User, error) {
 	return s.repo.FindAll(ctx)
 }
 
-func (s *UserService) FindPaginated(ctx context.Context, query interface{}, page int, limit int) (*types.PaginationResult, error) {
+func (s *UserService) FindPaginated(ctx context.Context, query interface{}, page int, limit int) (*types.UserPaginationResult, error) {
 	return s.repo.FindPaginated(ctx, query, page, limit)
 }
 
