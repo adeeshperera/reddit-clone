@@ -67,7 +67,7 @@ A production-ready boilerplate for building RESTful APIs using Go Echo framework
 
 4. **Install Air for hot reload**
    ```bash
-   go install github.com/cosmtrek/air@latest
+   go install github.com/air-verse/air@latest
    ```
 
 5. **Run the application**

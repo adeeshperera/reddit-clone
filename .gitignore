@@ -1,0 +1,4 @@
+/.idea
+/backend/pkg/mod
+/backend/pkg/sumdb
+/backend/.idea
