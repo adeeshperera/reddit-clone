@@ -79,6 +79,8 @@ func (r *UserRepository) FindPaginated(ctx context.Context, query interface{}, p
 	if err != nil {
 		return nil, err
 	}
+
+	//TODO: this is used to remove the password from the response, have to change with the qurry
 	for i := range users {
 		users[i].Password = ""
 	}
