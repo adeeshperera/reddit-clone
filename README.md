@@ -1,5 +1,7 @@
 # Reddit Clone
 
+## use [excalidraw](https://excalidraw.com/) and open the architecture and database
+
 ## Prerequisites
 
 Before starting, ensure you are familiar with the following concepts:
