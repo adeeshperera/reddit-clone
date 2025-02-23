@@ -106,6 +106,91 @@
 			"response": []
 		},
 		{
+			"name": "User Get Paginate",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/users/paginated?page=1&limit=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"paginated"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "limit",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "User Get Paginate",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/users/paginated?page=1&limit=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"paginated"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 23 Feb 2025 17:34:42 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "350"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"message\": \"Paginated users retrieved successfully\",\n    \"data\": {\n        \"Data\": [\n            {\n                \"id\": \"29c96371-9965-4e80-9f42-e444b2ac3c76\",\n                \"name\": \"Leo Gavin\",\n                \"email\": \"dfanso+2@pm.me\",\n                \"role\": \"admin\",\n                \"status\": \"active\",\n                \"created_at\": \"2025-02-23T22:37:35.035523+05:30\",\n                \"updated_at\": \"2025-02-23T22:37:35.035523+05:30\"\n            }\n        ],\n        \"Total\": 1,\n        \"Page\": 1,\n        \"Limit\": 10,\n        \"TotalPages\": 1\n    }\n}"
+				}
+			]
+		},
+		{
 			"name": "User Get One",
 			"request": {
 				"method": "GET",
