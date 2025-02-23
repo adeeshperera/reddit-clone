@@ -79,6 +79,9 @@ func (r *UserRepository) FindPaginated(ctx context.Context, query interface{}, p
 	if err != nil {
 		return nil, err
 	}
+	for i := range users {
+		users[i].Password = ""
+	}
 
 	// Calculate total pages
 	totalPages := int(math.Ceil(float64(total) / float64(limit)))
