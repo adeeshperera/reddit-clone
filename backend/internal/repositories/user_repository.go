@@ -3,14 +3,17 @@ package repositories
 import (
 	"context"
 	"errors"
+	"math"
 
 	"github.com/dfanso/go-echo-boilerplate/internal/models"
+	"github.com/dfanso/go-echo-boilerplate/internal/types"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type UserRepository struct {
 	db *gorm.DB
+	types.UserPaginationResult
 }
 
 func NewUserRepository(db *gorm.DB) *UserRepository {
@@ -34,7 +37,65 @@ func (r *UserRepository) FindOne(ctx context.Context, query interface{}) (*model
 func (r *UserRepository) FindAll(ctx context.Context) ([]models.User, error) {
 	var users []models.User
 	result := r.db.WithContext(ctx).Find(&users)
+	for i := range users {
+		users[i].Password = ""
+	}
 	return users, result.Error
+}
+
+func (r *UserRepository) FindPaginated(ctx context.Context, query interface{}, page int, limit int) (*types.UserPaginationResult, error) {
+
+	// Validate page (minimum 1)
+	if page < 1 {
+		page = 1
+	}
+	// Validate limit (default to 10, max 100)
+	if limit < 1 {
+		limit = 10
+	}
+	if limit > 100 {
+		limit = 100
+	}
+
+	// Get total count of users matching the query
+	var total int64
+	db := r.db.WithContext(ctx).Model(&models.User{})
+	if query != nil {
+		db = db.Where(query) // Apply filter if provided
+	}
+	err := db.Count(&total).Error
+	if err != nil {
+		return nil, err
+	}
+
+	// Fetch paginated users
+	var users []models.User
+	offset := (page - 1) * limit // Calculate offset
+	db = r.db.WithContext(ctx).Offset(offset).Limit(limit)
+	if query != nil {
+		db = db.Where(query) // Apply filter to the main query
+	}
+	err = db.Find(&users).Error
+	if err != nil {
+		return nil, err
+	}
+
+	//TODO: this is used to remove the password from the response, have to change with the qurry
+	for i := range users {
+		users[i].Password = ""
+	}
+
+	// Calculate total pages
+	totalPages := int(math.Ceil(float64(total) / float64(limit)))
+
+	// Return the result
+	return &types.UserPaginationResult{
+		Users:      users,
+		Total:      total,
+		Page:       page,
+		Limit:      limit,
+		TotalPages: totalPages,
+	}, nil
 }
 
 func (r *UserRepository) FindByID(ctx context.Context, id uuid.UUID) (*models.User, error) {
