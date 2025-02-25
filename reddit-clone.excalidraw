@@ -961,8 +961,8 @@
       "index": "aX",
       "roundness": null,
       "seed": 471138325,
-      "version": 2109,
-      "versionNonce": 1557822674,
+      "version": 2144,
+      "versionNonce": 172767630,
       "isDeleted": false,
       "boundElements": [
         {
@@ -970,16 +970,16 @@
           "type": "arrow"
         }
       ],
-      "updated": 1740502214800,
+      "updated": 1740502259619,
       "link": null,
       "locked": false,
-      "text": "id = uuid\nuserId= id\nsubreddiId =id\npostType= enum(text/ImageORvideo/Link/Pool)\ntitle= string\ndescription = string(optional)\nimage= string(s3Url)(optional)\nvideo = string (s3url)(optional)\nurl = string(optional)\npostVotes\noptions\nisNSFW = bool \nisSpoiler=bool\ngender\n \n\n\n",
+      "text": "id = uuid\nuserId= id\nsubreddiId =id\npostType= enum(text/ImageORvideo/Link/Pool)\ntitle= string\ndescription = string(optional)\nimage= string(s3Url)(optional)\nvideo = string (s3url)(optional)\nurl = string(optional)\npostVotes\noptions\nisNSFW = bool \nisSpoiler=bool\ngender=enum only allow gays\n \n\n\n",
       "fontSize": 36,
       "fontFamily": 5,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": null,
-      "originalText": "id = uuid\nuserId= id\nsubreddiId =id\npostType= enum(text/ImageORvideo/Link/Pool)\ntitle= string\ndescription = string(optional)\nimage= string(s3Url)(optional)\nvideo = string (s3url)(optional)\nurl = string(optional)\npostVotes\noptions\nisNSFW = bool \nisSpoiler=bool\ngender\n \n\n\n",
+      "originalText": "id = uuid\nuserId= id\nsubreddiId =id\npostType= enum(text/ImageORvideo/Link/Pool)\ntitle= string\ndescription = string(optional)\nimage= string(s3Url)(optional)\nvideo = string (s3url)(optional)\nurl = string(optional)\npostVotes\noptions\nisNSFW = bool \nisSpoiler=bool\ngender=enum only allow gays\n \n\n\n",
       "autoResize": true,
       "lineHeight": 1.25
     },
@@ -1263,8 +1263,8 @@
         "type": 2
       },
       "seed": 556552059,
-      "version": 1198,
-      "versionNonce": 1104614034,
+      "version": 1233,
+      "versionNonce": 1340725198,
       "isDeleted": false,
       "boundElements": [
         {
@@ -1272,7 +1272,7 @@
           "id": "0lhIxI62qsU2_nDE9bQby"
         }
       ],
-      "updated": 1740502214800,
+      "updated": 1740502259620,
       "link": null,
       "locked": false,
       "points": [
