@@ -33,4 +33,5 @@ jobs:
         fi
 
     - name: Run golangci-lint
+      working-directory: ./backend
       run: golangci-lint run ./... 
