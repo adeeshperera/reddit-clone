@@ -12,6 +12,7 @@ import (
 
 type Role string
 type Status string
+type Stage string
 
 const (
 	// Roles
@@ -19,9 +20,15 @@ const (
 	RoleUser  Role = "user"
 
 	// Statuses
-	StatusActive   Status = "active"
-	StatusInactive Status = "inactive"
-	StatusBanned   Status = "banned"
+	StatusVerified   Status = "verified"
+	StatusUnverified Status = "unverified"
+	StatusBanned     Status = "banned"
+
+	// Stages
+	StageEmailVerification Stage = "emailverification"
+	StageEmailVerified     Stage = "emailverified"
+	StageGoogleSSO         Stage = "googleSSo"
+	StageCompleted         Stage = "completed"
 
 	// Password constraints
 	MinPasswordLength = 8
@@ -29,15 +36,22 @@ const (
 )
 
 type User struct {
-	ID        uuid.UUID      `json:"id" gorm:"type:uuid;primary_key;default:uuid_generate_v4()"`
-	Name      string         `json:"name" validate:"required,min=2,max=50" gorm:"not null"`
-	Email     string         `json:"email" validate:"required,email" gorm:"uniqueIndex;not null"`
-	Password  string         `json:"password,omitempty" validate:"required,min=8,max=72" gorm:"not null"`
-	Role      Role           `json:"role" validate:"required,oneof=admin user" gorm:"type:varchar(20);not null;default:'user'"`
-	Status    Status         `json:"status" validate:"required,oneof=active inactive banned" gorm:"type:varchar(20);not null;default:'active'"`
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
+	ID           uuid.UUID      `json:"id" gorm:"type:uuid;primary_key;default:uuid_generate_v4()"`
+	Handler      string         `json:"handler" validate:"required,min=3,max=20,matches=^[a-zA-Z0-9]+(_[a-zA-Z0-9]+)*$" gorm:"uniqueIndex;not null"`
+	Name         string         `json:"name" validate:"required,min=2,max=50" gorm:"not null"`
+	Email        string         `json:"email" validate:"required,email" gorm:"uniqueIndex;not null"`
+	Password     string         `json:"password,omitempty" validate:"required,min=8,max=72" gorm:"not null"`
+	Role         Role           `json:"role" validate:"required,oneof=admin user" gorm:"type:varchar(20);not null;default:'user'"`
+	Status       Status         `json:"status" validate:"required,oneof=verified unverified banned" gorm:"type:varchar(20);not null;default:'unverified'"`
+	Stage        Stage          `json:"stage" validate:"required,oneof=emailverification emailverified googleSSo completed" gorm:"type:varchar(20);not null;default:'emailverification'"`
+	Avatar       string         `json:"avatar" gorm:"type:varchar(255)"`
+	Banner       string         `json:"banner" gorm:"type:varchar(255)"`
+	Description  string         `json:"description" gorm:"type:text"`
+	PostKarma    int            `json:"postKarma" gorm:"default:0"`
+	CommentKarma int            `json:"commentKarma" gorm:"default:0"`
+	CreatedAt    time.Time      `json:"created_at"`
+	UpdatedAt    time.Time      `json:"updated_at"`
+	DeletedAt    gorm.DeletedAt `json:"-" gorm:"index"`
 }
 
 // Create a singleton validator instance
@@ -53,9 +67,9 @@ func (u *User) Validate() error {
 
 func (u *User) ValidateUpdate() error {
 	if u.Password != "" {
-		return validate.StructPartial(u, "Name", "Email", "Password", "Role", "Status")
+		return validate.StructPartial(u, "Name", "Email", "Password", "Role", "Status", "Handler", "Stage")
 	}
-	return validate.StructPartial(u, "Name", "Email", "Role", "Status")
+	return validate.StructPartial(u, "Name", "Email", "Role", "Status", "Handler", "Stage")
 }
 
 // Password handling methods
@@ -89,7 +103,7 @@ func (u *User) BeforeCreate(tx *gorm.DB) error {
 		u.Role = RoleUser
 	}
 	if u.Status == "" {
-		u.Status = StatusActive
+		u.Status = StatusUnverified
 	}
 
 	return nil
