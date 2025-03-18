@@ -25,9 +25,9 @@ const (
 	StatusBanned     Status = "banned"
 
 	// Stages
-	StageEmailVerification Stage = "emailverification"
-	StageEmailVerified     Stage = "emailverified"
-	StageGoogleSSO         Stage = "googleSSo"
+	StageEmailVerification Stage = "email_verification"
+	StageEmailVerified     Stage = "email_verified"
+	StageGoogleSSO         Stage = "google_sso"
 	StageCompleted         Stage = "completed"
 
 	// Password constraints
@@ -43,7 +43,7 @@ type User struct {
 	Password     string         `json:"password,omitempty" validate:"required,min=8,max=72" gorm:"not null"`
 	Role         Role           `json:"role" validate:"required,oneof=admin user" gorm:"type:varchar(20);not null;default:'user'"`
 	Status       Status         `json:"status" validate:"required,oneof=verified unverified banned" gorm:"type:varchar(20);not null;default:'unverified'"`
-	Stage        Stage          `json:"stage" validate:"required,oneof=emailverification emailverified googleSSo completed" gorm:"type:varchar(20);not null;default:'emailverification'"`
+	Stage        Stage          `json:"stage" validate:"required,oneof=email_verification email_verified google_sso completed" gorm:"type:varchar(20);not null;default:'email_verification'"`
 	Avatar       string         `json:"avatar" gorm:"type:varchar(255)"`
 	Banner       string         `json:"banner" gorm:"type:varchar(255)"`
 	Description  string         `json:"description" gorm:"type:text"`
