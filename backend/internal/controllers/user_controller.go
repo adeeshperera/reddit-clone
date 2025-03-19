@@ -86,7 +86,7 @@ func (c *UserController) Create(ctx echo.Context) error {
 		user.Role = models.RoleUser
 	}
 	if user.Status == "" {
-		user.Status = models.StatusActive
+		user.Status = models.StatusUnverified
 	}
 
 	// Validate all fields
