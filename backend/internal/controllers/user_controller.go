@@ -8,9 +8,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/dfanso/go-echo-boilerplate/internal/models"
-	"github.com/dfanso/go-echo-boilerplate/internal/services"
-	"github.com/dfanso/go-echo-boilerplate/pkg/utils"
+	"github.com/dfanso/reddit-clone/internal/models"
+	"github.com/dfanso/reddit-clone/internal/services"
+	"github.com/dfanso/reddit-clone/pkg/utils"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"

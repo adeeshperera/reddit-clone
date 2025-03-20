@@ -5,9 +5,9 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/dfanso/go-echo-boilerplate/internal/models"
-	"github.com/dfanso/go-echo-boilerplate/internal/repositories"
-	"github.com/dfanso/go-echo-boilerplate/internal/types"
+	"github.com/dfanso/reddit-clone/internal/models"
+	"github.com/dfanso/reddit-clone/internal/repositories"
+	"github.com/dfanso/reddit-clone/internal/types"
 )
 
 type UserService struct {

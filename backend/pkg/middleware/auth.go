@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/dfanso/go-echo-boilerplate/pkg/auth"
+	"github.com/dfanso/reddit-clone/pkg/auth"
 	"github.com/golang-jwt/jwt/v5"
 )
 

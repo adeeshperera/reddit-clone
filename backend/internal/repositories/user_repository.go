@@ -5,8 +5,8 @@ import (
 	"errors"
 	"math"
 
-	"github.com/dfanso/go-echo-boilerplate/internal/models"
-	"github.com/dfanso/go-echo-boilerplate/internal/types"
+	"github.com/dfanso/reddit-clone/internal/models"
+	"github.com/dfanso/reddit-clone/internal/types"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
