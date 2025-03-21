@@ -2,10 +2,12 @@ package services
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/google/uuid"
 
+	dto "github.com/dfanso/reddit-clone/internal/dtos"
 	"github.com/dfanso/reddit-clone/internal/models"
 	"github.com/dfanso/reddit-clone/internal/repositories"
 	"github.com/dfanso/reddit-clone/internal/types"
@@ -38,7 +40,7 @@ func (s *UserService) GetByID(ctx context.Context, id uuid.UUID) (*models.User, 
 	return s.repo.FindByID(ctx, id)
 }
 
-func (s *UserService) Create(ctx context.Context, user *models.User) error {
+func (s *UserService) Create(ctx context.Context, user *models.User) (*models.User, error) {
 	return s.repo.Create(ctx, user)
 }
 
@@ -51,30 +53,51 @@ func (s *UserService) Delete(ctx context.Context, id uuid.UUID) error {
 }
 
 // RegisterUser creates a new user with the provided details and returns the user with formatted username
-func (s *UserService) RegisterUser(ctx context.Context, email, username, password string) (*models.User, error) {
+func (s *UserService) RegisterUser(ctx context.Context, req dto.RegisterRequest) (*models.User, error) {
 	// Create user model
 	user := &models.User{
-		Email:    email,
-		Handler:  username,
-		Name:     username, // Using username as initial name
-		Password: password,
+		Email:    req.Email,
+		Handler:  req.Username,
+		Name:     req.Username, // Using username as initial name
+		Password: req.Password,
 		Role:     models.RoleUser,
 		Status:   models.StatusUnverified,
 		Stage:    models.StageEmailVerification,
 	}
 
+	// Check if email already exists
+	filter := map[string]any{"email": req.Email}
+	existingUser, err := s.FindOne(ctx, filter)
+	if err != nil {
+		return nil, errors.New("Error checking existing user")
+	}
+	if existingUser != nil {
+		return nil, errors.New("email already in use")
+	}
+
+	// Check if username already exists
+	filter = map[string]any{"handler": req.Username}
+	existingUser, err = s.FindOne(ctx, filter)
+	if err != nil {
+		return nil, errors.New("Error checking existing username")
+	}
+	if existingUser != nil {
+		return nil, errors.New("Username already taken")
+	}
+
 	// Hash the password
 	if err := user.HashPassword(); err != nil {
-		return nil, fmt.Errorf("failed to hash password: %w", err)
+		return nil, errors.New("failed to hash password")
 	}
 
 	// Save the user to the database
-	if err := s.repo.Create(ctx, user); err != nil {
-		return nil, fmt.Errorf("failed to create user: %w", err)
+	createdUser, err := s.repo.Create(ctx, user)
+	if err != nil {
+		return nil, errors.New("failed to create user")
 	}
 
 	// Format the username with the "u/" prefix for the frontend
-	user.Handler = fmt.Sprintf("u/%s", user.Handler)
+	createdUser.Handler = fmt.Sprintf("u/%s", createdUser.Handler)
 
-	return user, nil
+	return createdUser, nil
 }
