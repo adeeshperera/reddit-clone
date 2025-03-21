@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 
@@ -47,4 +48,33 @@ func (s *UserService) Update(ctx context.Context, user *models.User) error {
 
 func (s *UserService) Delete(ctx context.Context, id uuid.UUID) error {
 	return s.repo.Delete(ctx, id)
+}
+
+// RegisterUser creates a new user with the provided details and returns the user with formatted username
+func (s *UserService) RegisterUser(ctx context.Context, email, username, password string) (*models.User, error) {
+	// Create user model
+	user := &models.User{
+		Email:    email,
+		Handler:  username,
+		Name:     username, // Using username as initial name
+		Password: password,
+		Role:     models.RoleUser,
+		Status:   models.StatusUnverified,
+		Stage:    models.StageEmailVerification,
+	}
+
+	// Hash the password
+	if err := user.HashPassword(); err != nil {
+		return nil, fmt.Errorf("failed to hash password: %w", err)
+	}
+
+	// Save the user to the database
+	if err := s.repo.Create(ctx, user); err != nil {
+		return nil, fmt.Errorf("failed to create user: %w", err)
+	}
+
+	// Format the username with the "u/" prefix for the frontend
+	user.Handler = fmt.Sprintf("u/%s", user.Handler)
+
+	return user, nil
 }

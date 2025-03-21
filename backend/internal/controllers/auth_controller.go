@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/dfanso/reddit-clone/dtos"
-	"github.com/dfanso/reddit-clone/internal/models"
 	"github.com/dfanso/reddit-clone/internal/services"
 	"github.com/dfanso/reddit-clone/pkg/utils"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
@@ -23,7 +22,7 @@ func NewAuthController(userService *services.UserService) *AuthController {
 
 func (c *AuthController) Register(ctx echo.Context) error {
 	// Bind request body to RegisterRequest DTO
-	var req dto.RegisterRequest
+	var req dtos.RegisterRequest
 	if err := ctx.Bind(&req); err != nil {
 		return utils.ErrorResponse(ctx, http.StatusBadRequest, "Invalid request body", err)
 	}
@@ -56,25 +55,10 @@ func (c *AuthController) Register(ctx echo.Context) error {
 		return utils.ErrorResponse(ctx, http.StatusConflict, "Username already taken", nil)
 	}
 
-	// Create new user
-	user := &models.User{
-		Email:   req.Email,
-		Handler: req.Username,
-		Name:    req.Username, // Use username as name for simplicity
-		Role:    models.RoleUser,
-		Status:  models.StatusUnverified,
-		Stage:   models.StageEmailVerification,
-	}
-	user.Password = req.Password
-
-	// Hash the password
-	if err := user.HashPassword(); err != nil {
-		return utils.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to process password", err)
-	}
-
-	// Save the user
-	if err := c.userService.Create(ctx.Request().Context(), user); err != nil {
-		return utils.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to create user", err)
+	// Register the user via the service layer
+	user, err := c.userService.RegisterUser(ctx.Request().Context(), req.Email, req.Username, req.Password)
+	if err != nil {
+		return utils.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to register user", err)
 	}
 
 	// Return success response
