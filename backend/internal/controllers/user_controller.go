@@ -8,9 +8,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/dfanso/go-echo-boilerplate/internal/models"
-	"github.com/dfanso/go-echo-boilerplate/internal/services"
-	"github.com/dfanso/go-echo-boilerplate/pkg/utils"
+	"github.com/dfanso/reddit-clone/internal/models"
+	"github.com/dfanso/reddit-clone/internal/services"
+	"github.com/dfanso/reddit-clone/pkg/utils"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -111,11 +111,12 @@ func (c *UserController) Create(ctx echo.Context) error {
 		return utils.ErrorResponse(ctx, http.StatusBadRequest, "User with this email already exists", nil)
 	}
 
-	if err := c.service.Create(ctx.Request().Context(), &user); err != nil {
+	createdUser, err := c.service.Create(ctx.Request().Context(), &user)
+	if err != nil {
 		return utils.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to create user", err)
 	}
 
-	return utils.SuccessResponse(ctx, http.StatusCreated, "User created successfully", user)
+	return utils.SuccessResponse(ctx, http.StatusCreated, "User created successfully", createdUser)
 }
 
 func (c *UserController) Update(ctx echo.Context) error {
