@@ -8,7 +8,7 @@ import (
 // RegisterRoutes registers all application routes
 func RegisterRoutes(e *echo.Echo, userController *controllers.UserController, authController *controllers.AuthController) {
 	// API group
-	api := e.Group("/api")
+	api := e.Group("/api/v1")
 
 	// Register all routes
 	registerUserRoutes(api, userController)

@@ -111,11 +111,12 @@ func (c *UserController) Create(ctx echo.Context) error {
 		return utils.ErrorResponse(ctx, http.StatusBadRequest, "User with this email already exists", nil)
 	}
 
-	if err := c.service.Create(ctx.Request().Context(), &user); err != nil {
+	createdUser, err := c.service.Create(ctx.Request().Context(), &user)
+	if err != nil {
 		return utils.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to create user", err)
 	}
 
-	return utils.SuccessResponse(ctx, http.StatusCreated, "User created successfully", user)
+	return utils.SuccessResponse(ctx, http.StatusCreated, "User created successfully", createdUser)
 }
 
 func (c *UserController) Update(ctx echo.Context) error {
