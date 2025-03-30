@@ -25,3 +25,19 @@ func (r RegisterRequest) Validate() error {
 		validation.Field(&r.Password, validation.Required, validation.Length(8, 72)),
 	)
 }
+
+// LoginRequest defines the structure for login input data
+type LoginRequest struct {
+	Email    string `json:"email"`    // User's email address
+	Password string `json:"password"` // User's password
+}
+
+// Validate validates the LoginRequest fields
+func (r LoginRequest) Validate() error {
+	return validation.ValidateStruct(&r,
+		// Email: required, valid email format, 5-100 characters
+		validation.Field(&r.Email, validation.Required, validation.Length(5, 100), is.Email),
+		// Password: required, 8-72 characters
+		validation.Field(&r.Password, validation.Required, validation.Length(8, 72)),
+	)
+}
