@@ -15,15 +15,15 @@ func RegisterRoutes(e *echo.Echo, userController *controllers.UserController, au
 	registerAuthRoutes(api, authController)
 }
 
-// registerAuthRoutes to map /api/auth/register and /api/auth/login
+// registerAuthRoutes to map /api/auth/register to the Register method
 func registerAuthRoutes(api *echo.Group, authController *controllers.AuthController) {
 	auth := api.Group("/auth")
 	auth.POST("/register", authController.Register)
-	auth.POST("/login", authController.Login)
 }
 
 // registerUserRoutes registers user-related routes
 func registerUserRoutes(api *echo.Group, userController *controllers.UserController) {
+
 	users := api.Group("/users")
 	{
 		users.GET("", userController.GetAll)
