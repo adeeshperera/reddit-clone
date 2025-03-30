@@ -56,8 +56,9 @@ func main() {
 	// Initialize dependencies
 	userRepo := repositories.NewUserRepository(db)
 	userService := services.NewUserService(userRepo)
+	authService := services.NewAuthService(userService)
 	userController := controllers.NewUserController(userService)
-	authController := controllers.NewAuthController(userService)
+	authController := controllers.NewAuthController(userService, authService)
 
 	// Register routes
 	routes.RegisterRoutes(e, userController, authController)
