@@ -4,10 +4,8 @@ import (
 	"context"
 	"errors"
 
-	"golang.org/x/crypto/bcrypt"
-
 	dto "github.com/dfanso/reddit-clone/internal/dtos"
-	"github.com/dfanso/reddit-clone/internal/models"
+	models "github.com/dfanso/reddit-clone/internal/models"
 )
 
 type AuthService struct {
@@ -31,20 +29,10 @@ func (s *AuthService) Login(ctx context.Context, req dto.LoginRequest) (*models.
 	}
 
 	// Check if the provided password matches the stored hashed password
-	if err := checkPassword(user.Password, req.Password); err != nil {
+	if err := user.ComparePassword(req.Password); err != nil {
 		return nil, errors.New("invalid password") // Password doesn't match
 	}
 
 	// Login successful, return the user
 	return user, nil
-}
-
-// checkPassword compares a hashed password with a plaintext password
-func checkPassword(hashedPassword, plainPassword string) error {
-	// Convert the hashed password string to bytes and compare with the plaintext password
-	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(plainPassword))
-	if err != nil {
-		return err // Returns bcrypt.ErrMismatchedHashAndPassword if they don't match
-	}
-	return nil
 }
