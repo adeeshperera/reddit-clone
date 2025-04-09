@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/dfanso/reddit-clone/pkg/auth"
-	"github.com/golang-jwt/jwt/v5"
 )
 
 // AuthMiddleware verifies the JWT token and extracts user data into context
@@ -27,21 +26,15 @@ func AuthMiddleware(jwtManager *auth.JWTManager) func(http.Handler) http.Handler
 			}
 
 			tokenString := parts[1]
-			token, err := jwtManager.VerifyToken(tokenString)
-			if err != nil || !token.Valid {
+			claims, err := jwtManager.ValidateToken(tokenString)
+			if err != nil {
 				http.Error(w, "Invalid or expired token", http.StatusUnauthorized)
 				return
 			}
 
-			claims, ok := token.Claims.(jwt.MapClaims)
-			if !ok {
-				http.Error(w, "Invalid token claims", http.StatusUnauthorized)
-				return
-			}
-
 			// Store user_id and role in request context
-			ctx := context.WithValue(r.Context(), "user_id", claims["user_id"])
-			ctx = context.WithValue(ctx, "role", claims["role"])
+			ctx := context.WithValue(r.Context(), "user_id", claims.UserID)
+			ctx = context.WithValue(ctx, "role", claims.Role)
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
