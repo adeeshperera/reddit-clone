@@ -5,78 +5,98 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
-	"github.com/golang-jwt/jwt/v5"
 	"os"
 	"time"
+
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
 
-const defaultTokenExpiration = time.Hour * 24
+// JWTClaims defines the structure of the JWT payload
+type JWTClaims struct {
+	UserID uuid.UUID `json:"id"`
+	Role   string    `json:"role"`
+	jwt.RegisteredClaims
+}
 
-// JWTManager handles the generation and verification of JWT tokens
+// JWTManager handles JWT generation and validation
 type JWTManager struct {
 	privateKey *ecdsa.PrivateKey
 	publicKey  *ecdsa.PublicKey
 }
 
-// NewJWTManager initializes a new JWTManager with keys loaded from PEM files
-func NewJWTManager(privateKeyPath, publicKeyPath string) (*JWTManager, error) {
-	privateKey, err := loadECDSAKey(privateKeyPath, true)
+// NewJWTManager initializes a JWTManager with keys from files
+func NewJWTManager() (*JWTManager, error) {
+	// Read private key
+	privateKeyBytes, err := os.ReadFile("keys/private.pem")
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not read private key: %v", err)
 	}
 
-	publicKey, err := loadECDSAKey(publicKeyPath, false)
+	// Parse private key
+	block, _ := pem.Decode(privateKeyBytes)
+	if block == nil {
+		return nil, fmt.Errorf("failed to parse PEM block containing private key")
+	}
+	privateKey, err := x509.ParseECPrivateKey(block.Bytes)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to parse private key: %v", err)
+	}
+
+	// Read public key
+	publicKeyBytes, err := os.ReadFile("keys/public.pem")
+	if err != nil {
+		return nil, fmt.Errorf("could not read public key: %v", err)
+	}
+
+	// Parse public key
+	block, _ = pem.Decode(publicKeyBytes)
+	if block == nil {
+		return nil, fmt.Errorf("failed to parse PEM block containing public key")
+	}
+	publicKey, err := x509.ParsePKIXPublicKey(block.Bytes)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse public key: %v", err)
+	}
+	ecdsaPublicKey, ok := publicKey.(*ecdsa.PublicKey)
+	if !ok {
+		return nil, fmt.Errorf("public key is not an ECDSA key")
 	}
 
 	return &JWTManager{
-		privateKey: privateKey.(*ecdsa.PrivateKey),
-		publicKey:  publicKey.(*ecdsa.PublicKey),
+		privateKey: privateKey,
+		publicKey:  ecdsaPublicKey,
 	}, nil
 }
 
-// GenerateToken generates a new JWT token for a user
-func (jm *JWTManager) GenerateToken(userID, role string) (string, error) {
-	claims := jwt.MapClaims{
-		"user_id": userID,
-		"role":    role,
-		"exp":     time.Now().Add(defaultTokenExpiration).Unix(),
-		"iat":     time.Now().Unix(), // Issued at
-		"nbf":     time.Now().Unix(), // Not before
+// GenerateToken creates a new JWT for a user
+func (m *JWTManager) GenerateToken(userID uuid.UUID, role string) (string, error) {
+	claims := &JWTClaims{
+		UserID: userID,
+		Role:   role,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+			NotBefore: jwt.NewNumericDate(time.Now()),
+		},
 	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodES512, claims)
-	return token.SignedString(jm.privateKey)
+	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+	return token.SignedString(m.privateKey)
 }
 
-// VerifyToken verifies and parses a JWT token
-func (jm *JWTManager) VerifyToken(tokenString string) (*jwt.Token, error) {
-	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		return jm.publicKey, nil
+// ValidateToken verifies a JWT and returns its claims
+func (m *JWTManager) ValidateToken(tokenString string) (*JWTClaims, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodECDSA); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return m.publicKey, nil
 	})
-}
-
-// loadECDSAKey loads an ECDSA private or public key from a PEM file
-func loadECDSAKey(path string, isPrivate bool) (interface{}, error) {
-	keyData, err := os.ReadFile(path)
 	if err != nil {
-		return nil, fmt.Errorf("error reading key file: %v", err)
+		return nil, fmt.Errorf("invalid token: %v", err)
 	}
-
-	block, _ := pem.Decode(keyData)
-	if block == nil {
-		return nil, fmt.Errorf("failed to parse PEM block")
+	if claims, ok := token.Claims.(*JWTClaims); ok && token.Valid {
+		return claims, nil
 	}
-
-	if isPrivate {
-		return x509.ParseECPrivateKey(block.Bytes)
-	}
-
-	pubKey, err := x509.ParsePKIXPublicKey(block.Bytes)
-	if err != nil {
-		return nil, fmt.Errorf("error parsing public key: %v", err)
-	}
-
-	return pubKey.(*ecdsa.PublicKey), nil
+	return nil, fmt.Errorf("invalid token claims")
 }
