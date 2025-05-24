@@ -32,6 +32,8 @@ func AuthMiddleware(jwtManager *auth.JWTManager) func(http.Handler) http.Handler
 				return
 			}
 
+			//TODO: Check if user is exists in database
+
 			// Store user_id and role in request context
 			ctx := context.WithValue(r.Context(), "user_id", claims.UserID)
 			ctx = context.WithValue(ctx, "role", claims.Role)

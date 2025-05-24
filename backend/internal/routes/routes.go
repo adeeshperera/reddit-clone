@@ -34,3 +34,5 @@ func registerUserRoutes(api *echo.Group, userController *controllers.UserControl
 		users.DELETE("/:id", userController.Delete)
 	}
 }
+
+//TODO: Auth middleware with protected routes
