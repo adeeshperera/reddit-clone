@@ -3,6 +3,7 @@ package dtos
 import (
 	"regexp"
 
+	"github.com/dfanso/reddit-clone/internal/models"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
 )
@@ -40,4 +41,10 @@ func (r LoginRequest) Validate() error {
 		// Password: required, 8-72 characters
 		validation.Field(&r.Password, validation.Required, validation.Length(8, 72)),
 	)
+}
+
+// LoginResponse defines the structure for login response data
+type LoginResponse struct {
+	User  *models.User `json:"user"`  // User data
+	Token string       `json:"token"` // JWT token
 }

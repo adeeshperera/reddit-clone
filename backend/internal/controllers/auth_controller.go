@@ -5,6 +5,7 @@ import (
 
 	dto "github.com/dfanso/reddit-clone/internal/dtos"
 	"github.com/dfanso/reddit-clone/internal/services"
+	"github.com/dfanso/reddit-clone/pkg/auth"
 	"github.com/dfanso/reddit-clone/pkg/utils"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/labstack/echo/v4"
@@ -13,12 +14,14 @@ import (
 type AuthController struct {
 	userService *services.UserService
 	authService *services.AuthService
+	jwtManager  *auth.JWTManager
 }
 
-func NewAuthController(userService *services.UserService, authService *services.AuthService) *AuthController {
+func NewAuthController(userService *services.UserService, authService *services.AuthService, jwtManager *auth.JWTManager) *AuthController {
 	return &AuthController{
 		userService: userService,
 		authService: authService,
+		jwtManager:  jwtManager,
 	}
 }
 
@@ -69,12 +72,20 @@ func (c *AuthController) Login(ctx echo.Context) error {
 		return utils.ErrorResponse(ctx, http.StatusUnauthorized, "Login failed", err)
 	}
 
-	// TODO: Generate JWT token
+	// Generate JWT token
+	token, err := c.jwtManager.GenerateToken(user.ID, string(user.Role))
+	if err != nil {
+		return utils.ErrorResponse(ctx, http.StatusInternalServerError, "Failed to generate token", err)
+	}
 
-	//retrun  jwt token with user object
+	// Create login response with user object and JWT token
+	response := dto.LoginResponse{
+		User:  user,
+		Token: token,
+	}
 
 	// Return success response
-	return utils.SuccessResponse(ctx, http.StatusOK, "Login successful", user)
+	return utils.SuccessResponse(ctx, http.StatusOK, "Login successful", response)
 }
 
 //TODO: Profile
