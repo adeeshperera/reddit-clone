@@ -1,6 +1,6 @@
 package types
 
-import "github.com/dfanso/go-echo-boilerplate/internal/models"
+import "github.com/dfanso/reddit-clone/internal/models"
 
 type UserPaginationResult struct {
 	Users      []models.User

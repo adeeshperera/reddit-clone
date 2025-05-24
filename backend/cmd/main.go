@@ -3,15 +3,15 @@ package main
 import (
 	"log"
 
-	"github.com/dfanso/go-echo-boilerplate/config"
-	"github.com/dfanso/go-echo-boilerplate/internal/controllers"
-	"github.com/dfanso/go-echo-boilerplate/internal/models"
-	"github.com/dfanso/go-echo-boilerplate/internal/repositories"
-	"github.com/dfanso/go-echo-boilerplate/internal/routes"
-	"github.com/dfanso/go-echo-boilerplate/internal/services"
-	"github.com/dfanso/go-echo-boilerplate/pkg/database"
+	"github.com/dfanso/reddit-clone/config"
+	"github.com/dfanso/reddit-clone/internal/controllers"
+	"github.com/dfanso/reddit-clone/internal/models"
+	"github.com/dfanso/reddit-clone/internal/repositories"
+	"github.com/dfanso/reddit-clone/internal/routes"
+	"github.com/dfanso/reddit-clone/internal/services"
+	"github.com/dfanso/reddit-clone/pkg/database"
 
-	customMiddleware "github.com/dfanso/go-echo-boilerplate/pkg/middleware"
+	customMiddleware "github.com/dfanso/reddit-clone/pkg/middleware"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -56,10 +56,12 @@ func main() {
 	// Initialize dependencies
 	userRepo := repositories.NewUserRepository(db)
 	userService := services.NewUserService(userRepo)
+	authService := services.NewAuthService(userService)
 	userController := controllers.NewUserController(userService)
+	authController := controllers.NewAuthController(userService, authService)
 
 	// Register routes
-	routes.RegisterRoutes(e, userController)
+	routes.RegisterRoutes(e, userController, authController)
 
 	// health check route
 	e.GET("/health", func(c echo.Context) error {

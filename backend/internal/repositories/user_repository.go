@@ -5,8 +5,8 @@ import (
 	"errors"
 	"math"
 
-	"github.com/dfanso/go-echo-boilerplate/internal/models"
-	"github.com/dfanso/go-echo-boilerplate/internal/types"
+	"github.com/dfanso/reddit-clone/internal/models"
+	"github.com/dfanso/reddit-clone/internal/types"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -107,8 +107,19 @@ func (r *UserRepository) FindByID(ctx context.Context, id uuid.UUID) (*models.Us
 	return &user, nil
 }
 
-func (r *UserRepository) Create(ctx context.Context, user *models.User) error {
-	return r.db.WithContext(ctx).Create(user).Error
+func (r *UserRepository) Create(ctx context.Context, user *models.User) (*models.User, error) {
+
+	result := r.db.WithContext(ctx).Create(user)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	user, err := r.FindByID(ctx, user.ID)
+	if err != nil {
+		return nil, err
+	}
+	user.Password = ""
+	return user, nil
 }
 
 func (r *UserRepository) Update(ctx context.Context, user *models.User) error {

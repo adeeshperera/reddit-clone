@@ -1,22 +1,29 @@
 package routes
 
 import (
-	"github.com/dfanso/go-echo-boilerplate/internal/controllers"
+	"github.com/dfanso/reddit-clone/internal/controllers"
 	"github.com/labstack/echo/v4"
 )
 
 // RegisterRoutes registers all application routes
-func RegisterRoutes(e *echo.Echo, userController *controllers.UserController) {
+func RegisterRoutes(e *echo.Echo, userController *controllers.UserController, authController *controllers.AuthController) {
 	// API group
-	api := e.Group("/api")
+	api := e.Group("/api/v1")
 
 	// Register all routes
 	registerUserRoutes(api, userController)
+	registerAuthRoutes(api, authController)
+}
+
+// registerAuthRoutes to map /api/auth/register and /api/auth/login
+func registerAuthRoutes(api *echo.Group, authController *controllers.AuthController) {
+	auth := api.Group("/auth")
+	auth.POST("/register", authController.Register)
+	auth.POST("/login", authController.Login)
 }
 
 // registerUserRoutes registers user-related routes
 func registerUserRoutes(api *echo.Group, userController *controllers.UserController) {
-
 	users := api.Group("/users")
 	{
 		users.GET("", userController.GetAll)
@@ -27,3 +34,5 @@ func registerUserRoutes(api *echo.Group, userController *controllers.UserControl
 		users.DELETE("/:id", userController.Delete)
 	}
 }
+
+//TODO: Auth middleware with protected routes
