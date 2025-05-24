@@ -71,6 +71,8 @@ func (c *AuthController) Login(ctx echo.Context) error {
 
 	// TODO: Generate JWT token
 
+	//retrun  jwt token with user object
+
 	// Return success response
 	return utils.SuccessResponse(ctx, http.StatusOK, "Login successful", user)
 }
