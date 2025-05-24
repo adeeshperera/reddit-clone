@@ -9,6 +9,7 @@ import (
 	"github.com/dfanso/reddit-clone/internal/repositories"
 	"github.com/dfanso/reddit-clone/internal/routes"
 	"github.com/dfanso/reddit-clone/internal/services"
+	"github.com/dfanso/reddit-clone/pkg/auth"
 	"github.com/dfanso/reddit-clone/pkg/database"
 
 	customMiddleware "github.com/dfanso/reddit-clone/pkg/middleware"
@@ -53,12 +54,18 @@ func main() {
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
 
+	// Initialize JWT manager
+	jwtManager, err := auth.NewJWTManager()
+	if err != nil {
+		log.Fatalf("Failed to initialize JWT manager: %v", err)
+	}
+
 	// Initialize dependencies
 	userRepo := repositories.NewUserRepository(db)
 	userService := services.NewUserService(userRepo)
 	authService := services.NewAuthService(userService)
 	userController := controllers.NewUserController(userService)
-	authController := controllers.NewAuthController(userService, authService)
+	authController := controllers.NewAuthController(userService, authService, jwtManager)
 
 	// Register routes
 	routes.RegisterRoutes(e, userController, authController)
