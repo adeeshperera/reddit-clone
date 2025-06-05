@@ -1,4 +1,4 @@
-## Reddit Clone
+# Reddit Clone
 
 ## use [excalidraw](https://excalidraw.com/) and open the architecture and database
 
