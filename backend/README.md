@@ -135,6 +135,13 @@ return utils.SuccessResponse(ctx, http.StatusOK, "Success message", data)
    ./app
    ```
 
+## Generate Key Pair
+
+```
+mkdir keys
+openssl ecparam -name prime256v1 -genkey -noout -out keys/private.pem; openssl ec -in keys/private.pem -pubout -out keys/public.pem
+```
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details
