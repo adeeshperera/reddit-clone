@@ -68,7 +68,7 @@ func main() {
 	authController := controllers.NewAuthController(userService, authService, jwtManager)
 
 	// Register routes
-	routes.RegisterRoutes(e, userController, authController, jwtManager)
+	routes.RegisterRoutes(e, userController, authController, jwtManager, userService)
 
 	// health check route
 	e.GET("/health", func(c echo.Context) error {
