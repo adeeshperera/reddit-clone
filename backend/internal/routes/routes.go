@@ -2,13 +2,14 @@ package routes
 
 import (
 	"github.com/dfanso/reddit-clone/internal/controllers"
+	"github.com/dfanso/reddit-clone/internal/services"
 	"github.com/dfanso/reddit-clone/pkg/auth"
 	"github.com/dfanso/reddit-clone/pkg/middleware"
 	"github.com/labstack/echo/v4"
 )
 
 // RegisterRoutes registers all application routes
-func RegisterRoutes(e *echo.Echo, userController *controllers.UserController, authController *controllers.AuthController, jwtManager *auth.JWTManager) {
+func RegisterRoutes(e *echo.Echo, userController *controllers.UserController, authController *controllers.AuthController, jwtManager *auth.JWTManager, userService *services.UserService) {
 	// API group
 	api := e.Group("/api/v1")
 
@@ -16,7 +17,7 @@ func RegisterRoutes(e *echo.Echo, userController *controllers.UserController, au
 	PublicRoutes(api, authController)
 
 	// Register private routes (authentication required)
-	PrivateRoutes(api, authController, userController, jwtManager)
+	PrivateRoutes(api, authController, userController, jwtManager, userService)
 }
 
 // PublicRoutes registers routes that don't require authentication
@@ -32,10 +33,10 @@ func PublicRoutes(api *echo.Group, authController *controllers.AuthController) {
 }
 
 // PrivateRoutes registers routes that require authentication
-func PrivateRoutes(api *echo.Group, authController *controllers.AuthController, userController *controllers.UserController, jwtManager *auth.JWTManager) {
+func PrivateRoutes(api *echo.Group, authController *controllers.AuthController, userController *controllers.UserController, jwtManager *auth.JWTManager, userService *services.UserService) {
 	// Create protected group with JWT middleware
 	protected := api.Group("")
-	protected.Use(middleware.AuthMiddleware(jwtManager))
+	protected.Use(middleware.AuthMiddleware(jwtManager, userService))
 
 	//auth routes - protected
 	// auth := protected.Group("/auth")

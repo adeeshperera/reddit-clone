@@ -5,12 +5,13 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/dfanso/reddit-clone/internal/services"
 	"github.com/dfanso/reddit-clone/pkg/auth"
 	"github.com/labstack/echo/v4"
 )
 
 // AuthMiddleware verifies the JWT token and extracts user data into context
-func AuthMiddleware(jwtManager *auth.JWTManager) echo.MiddlewareFunc {
+func AuthMiddleware(jwtManager *auth.JWTManager, userService *services.UserService) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			authHeader := c.Request().Header.Get("Authorization")
@@ -30,7 +31,14 @@ func AuthMiddleware(jwtManager *auth.JWTManager) echo.MiddlewareFunc {
 				return echo.NewHTTPError(http.StatusUnauthorized, "Invalid or expired token")
 			}
 
-			//TODO: Check if user is exists in database
+			// Check if user exists in database
+			user, err := userService.GetByID(c.Request().Context(), claims.UserID)
+			if err != nil {
+				return echo.NewHTTPError(http.StatusInternalServerError, "Error checking user existence")
+			}
+			if user == nil {
+				return echo.NewHTTPError(http.StatusUnauthorized, "User not found")
+			}
 
 			// Store user_id and role in request context
 			ctx := context.WithValue(c.Request().Context(), "user_id", claims.UserID)
